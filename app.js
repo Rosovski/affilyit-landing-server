@@ -1,5 +1,4 @@
 const express = require("express");
-
 const app = express();
 
 const dotenv = require("dotenv").config();
@@ -8,7 +7,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const cors = require("cors");
-
 app.use(cors());
 
 const axios = require("axios");
@@ -16,7 +14,7 @@ const axios = require("axios");
 app.post("/api/email", async (req, res) => {
   const URL = process.env.BREVO_URL;
   const apiKey = process.env.BREVO_API_KEY;
-  console.log("url: ", URL);
+
   const { message } = req.body;
 
   const emailData = {
