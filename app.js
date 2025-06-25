@@ -42,7 +42,7 @@ app.post("/api/email", async (req, res) => {
     },
     to: [
       {
-        email: "shawn.bao1992@gmail.com",
+        email: "gi@affilyit.ai",
       },
     ],
     subject,
