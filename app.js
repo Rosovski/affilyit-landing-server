@@ -11,11 +11,29 @@ app.use(cors());
 
 const axios = require("axios");
 
+const { subscribeTemplate, partnerTemplate } = require("./utils/emailTemplate");
+
 app.post("/api/email", async (req, res) => {
   const URL = process.env.BREVO_URL;
   const apiKey = process.env.BREVO_API_KEY;
 
-  const { message } = req.body;
+  const { type, email, partnerRequest } = req.body;
+
+  let subject;
+  let htmlContent;
+
+  switch (type) {
+    case "subscribeNewsLetter":
+      subject = "You've got 1 new subscriber!";
+      htmlContent = subscribeTemplate(email);
+      break;
+    case "partnerWithAffilyit":
+      subject = "You've got 1 new partner request!";
+      htmlContent = partnerTemplate(partnerRequest);
+      break;
+    default:
+      break;
+  }
 
   const emailData = {
     sender: {
@@ -27,8 +45,8 @@ app.post("/api/email", async (req, res) => {
         email: "shawn.bao1992@gmail.com",
       },
     ],
-    subject: "test email",
-    htmlContent: `<html><body><h1>${message}</h1></body></html>`,
+    subject,
+    htmlContent,
   };
 
   try {
@@ -40,7 +58,7 @@ app.post("/api/email", async (req, res) => {
     });
     res
       .status(201)
-      .json({ message: "Email sent!", messageId: response.messageId });
+      .json({ message: "Success!", messageId: response.data.messageId });
   } catch (error) {
     console.error("Error sending email:", error);
     res
