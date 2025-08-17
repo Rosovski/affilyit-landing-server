@@ -67,6 +67,28 @@ app.post("/api/email", async (req, res) => {
   }
 });
 
+app.post("/api/subscribe", async (req, res) => {
+  const { email } = req.body;
+
+  const WEBHOOK_URL = process.env.WEBHOOK_URL;
+
+  try {
+    await axios.post(
+      WEBHOOK_URL,
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.status(200).json({ message: "Success!" });
+  } catch (error) {
+    console.error("Error sending to GoHighLevel webhook:", error);
+    res.status(500).json({ message: "Failed to send to GoHighLevel webhook" });
+  }
+});
+
 app.listen(3001, () => {
   console.log("Server is running on http://localhost:3001");
 });
